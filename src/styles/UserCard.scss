@@ -1,55 +1,50 @@
-#userCard{
+#userCard {
     display: flex;
     padding: 0.7rem;
     border-radius: 10px;
     border: solid 0.1rem #835afd;
     margin-top: 1rem;
     box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.3);
-
-    div{
+    div {
         width: 50%;
         align-items: center;
         justify-content: center;
         margin: auto;
-
-        img{
+        img {
             border-radius: 50%;
         }
-
-        h4{
-            white-space: nowrap;
+        h4 {
+            white-space: normal;
+            color: #000;
+            font-weight: 400;
         }
-
-        span{
+        span {
             margin-top: 2px;
-            display:inline-block;
-            padding:.25em .5em;
-            font-size:.75em;
+            display: inline-block;
+            padding: .25em .5em;
+            font-size: .75em;
             font-weight: 500;
-            line-height:1;
-            color:#fff;
-            text-align:center;
-            white-space:nowrap;
-            vertical-align:baseline;
-            border-radius:.25rem;
-            padding-right:.9em;
-            padding-left:.9em;
+            line-height: 1;
+            color: #fff;
+            text-align: center;
+            white-space: nowrap;
+            vertical-align: baseline;
+            padding-right: 1.5em;
+            padding-left: 1.5em;
             border-radius: 10rem;
-            background-color:#dc3545;
-            
-            &::before{
+            background-color: #dc3545;
+            border: solid 0.1rem #dc3545;
+            transition: 500ms;
+            &::before {
                 content: 'Sair';
             }
-
-            &:hover{
+            &:hover {
                 cursor: pointer;
-                border-radius: 50%;
-                padding: 0.2em;
-                &::before{
-                    width: 14px;
-                    height: 14px;
-                    content: url('../assets/images/log-off.svg');
-                }
+                background-color: #fff;
+                color: #dc3545;
+                padding-left: 2rem;
+                padding-right: 2rem;
+                border-radius: 5px;
             }
         }
     }

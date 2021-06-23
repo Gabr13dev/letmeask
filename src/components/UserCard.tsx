@@ -1,5 +1,4 @@
-import { User } from '../models/user.model'
-
+import { ReactElement, useState } from 'react';
 import '../styles/UserCard.scss';
 
 type UserCardProps = {

@@ -3,10 +3,9 @@ import { createContext, useState, useEffect, ReactNode } from "react";
 import { auth, firebase } from "../services/firebase";
 
 import { User } from '../models/user.model';
-import { UserCard } from "../components/UserCard";
 
 type AuthContextType = {
-    user: object | undefined,
+    user: User | undefined,
     signInWithGoogle: () => Promise<void>;
     signOut: () => Promise<void>;
   }
