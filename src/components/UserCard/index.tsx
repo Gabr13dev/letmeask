@@ -1,4 +1,4 @@
-import '../styles/UserCard.scss';
+import './UserCard.scss';
 
 type UserCardProps = {
     user: any;

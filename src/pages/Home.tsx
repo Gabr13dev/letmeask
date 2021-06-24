@@ -1,11 +1,12 @@
 import { useHistory } from "react-router-dom";
 
-import { auth, database, firebase } from "../services/firebase";
+import { database } from "../services/firebase";
 
 import illustrationImg from "../assets/images/illustration.svg";
 import logoimg from "../assets/images/logo.svg";
 import googleIcon from "../assets/images/google-icon.svg";
 import loginIcon from "../assets/images/log-in.svg";
+import loadingIcon from '../assets/images/spinner.svg';
 
 import { useAuth } from "../hooks/useAuth";
 
@@ -19,6 +20,7 @@ export function Home() {
   const history = useHistory();
   const { user, signInWithGoogle, signOut } = useAuth();
   const [roomCode, setRoomCode] = useState("");
+  const [ contentButtonJoin, setContentButtonJoin ] = useState(<><img src={loginIcon} alt="Join room Icon" /> Entrar na sala</>);
 
   async function handleCreateRoom() {
     if (!user) {
@@ -29,42 +31,26 @@ export function Home() {
   }
 
   async function handleJoinRoom(event: FormEvent) {
+    setContentButtonJoin(<><img src={loadingIcon} alt="Loading Icon" /></>)
     event.preventDefault();
 
     if (roomCode.trim() === "") {
+      setContentButtonJoin(<><img src={loginIcon} alt="Join room Icon" /> Entrar na sala</>);
       return;
     }
 
     const roomRef = await database.ref(`rooms/${roomCode}`).get();
 
     if (!roomRef.exists()) {
-        alert("Sala não existe!")
-        return;
+        alert("Sala não existe!");
     }else{
         history.push(`/rooms/${roomCode}`);
     }
+    setContentButtonJoin(<><img src={loginIcon} alt="Join room Icon" /> Entrar na sala</>);
   }
 
   function navigateToCreateRoom() {
     history.push("/rooms/new");
-  }
-
-  function ShowButtonOrCard() {
-    if (!user) {
-      return (
-        <button className="create-room" onClick={handleCreateRoom}>
-          <img src={googleIcon} alt="Google Icon" />
-          Crie sua sala com o Google
-        </button>
-      );
-    } else {
-      return (
-        <>
-          <UserCard user={user} logout={signOut} />{" "}
-          <Button onClick={navigateToCreateRoom}>Quero criar uma sala</Button>{" "}
-        </>
-      );
-    }
   }
 
   return (
@@ -77,7 +63,17 @@ export function Home() {
       <main>
         <div className="main-content">
           <img src={logoimg} alt="Letmeask Logo" />
-          <ShowButtonOrCard />
+          { !user ? (
+        <button className="create-room" onClick={handleCreateRoom}>
+          <img src={googleIcon} alt="Google Icon" />
+          Crie sua sala com o Google
+        </button>
+      ) : (
+        <>
+          <UserCard user={user} logout={signOut} />{" "}
+          <Button onClick={navigateToCreateRoom} style={{marginTop: '2rem'}}>Quero criar uma sala</Button>{" "}
+        </>
+      )}
           <div className="separator">ou entre em uma sala</div>
           <form onSubmit={handleJoinRoom}>
             <input
@@ -87,7 +83,7 @@ export function Home() {
               value={roomCode}
             />
             <Button type="submit">
-              <img src={loginIcon} alt="Join room Icon" /> Entrar na sala
+              {contentButtonJoin}
             </Button>
           </form>
         </div>

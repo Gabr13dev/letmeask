@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import illustrationImg from '../assets/images/illustration.svg'
 import logoimg from '../assets/images/logo.svg'
 import newRoomIcon from '../assets/images/new-room.svg'
+import loadingIcon from '../assets/images/spinner.svg'
 
 import { FormEvent, useState } from 'react';
 
@@ -15,10 +16,12 @@ import '../styles/auth.scss';
 import { useAuth } from '../hooks/useAuth';
 
 import { database } from '../services/firebase'
+import { Loading } from '../components/Loading';
 
 export function NewRoom(){
-    const { user , signInWithGoogle, signOut } = useAuth();
+    const { user } = useAuth();
     const [ newRoom, setNewRoom ] = useState('');
+    const [ contentButtonSend, setContentButtonSend ] = useState(<><img src={newRoomIcon} alt="Add icon" /> Criar sala</>);
     const history = useHistory();
 
     async function handleCreateRoom(event: FormEvent) {
@@ -26,6 +29,7 @@ export function NewRoom(){
         if(newRoom.trim() ===  ''){
             return;
         }else{
+            setContentButtonSend(<><img src={loadingIcon} alt="Loading icon" /></>);
             const roomRef = database.ref('rooms');
             const firebaseRoom = await roomRef.push({
                 title: newRoom,
@@ -34,6 +38,7 @@ export function NewRoom(){
 
             history.push(`/rooms/${firebaseRoom.key}`)
         }
+        setContentButtonSend(<><img src={newRoomIcon} alt="Add icon" /> Criar sala</>);
     }
 
     function ShowMessageUser(){
@@ -42,6 +47,7 @@ export function NewRoom(){
 
     return (
         <div id="page-auth">
+            { user ? (<></>) : (<Loading />) }
             <aside>
                 <img src={illustrationImg} alt="Illustração de perguntas e respostas" />
                 <strong>Crie salas de Q&amp;A ao-vivo</strong>
@@ -60,7 +66,7 @@ export function NewRoom(){
                             value={newRoom}
                         />
                         <Button type="submit">
-                           <img src={newRoomIcon} /> Criar sala
+                           {contentButtonSend}
                         </Button>
                     </form>
                     <p>
