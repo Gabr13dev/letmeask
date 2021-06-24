@@ -1,4 +1,3 @@
-import { ReactElement, useState } from 'react';
 import '../styles/UserCard.scss';
 
 type UserCardProps = {
@@ -7,7 +6,7 @@ type UserCardProps = {
 }
 
 export function UserCard(prop: UserCardProps){
-    if(prop.user == undefined){
+    if(prop.user === undefined){
         return (
             <></>
         )
@@ -15,7 +14,7 @@ export function UserCard(prop: UserCardProps){
         return (
             <section id="userCard">
                 <div>
-                    <img src={prop.user.avatar} width="85" /> 
+                    <img src={prop.user.avatar} alt={prop.user.name} width="85" /> 
                 </div>
                 <div>
                     <h4>{prop.user.name}</h4>

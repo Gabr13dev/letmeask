@@ -9,15 +9,12 @@ import { FormEvent, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 
 import { Button } from '../components/Button';
-import { UserCard } from '../components/UserCard';
 
 import '../styles/auth.scss';
 
 import { useAuth } from '../hooks/useAuth';
 
 import { database } from '../services/firebase'
-
-import { User } from '../models/user.model'
 
 export function NewRoom(){
     const { user , signInWithGoogle, signOut } = useAuth();
