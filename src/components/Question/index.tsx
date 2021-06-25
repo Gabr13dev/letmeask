@@ -2,6 +2,7 @@ import { ReactNode } from 'react';
 import './questions.scss';
 
 type QuestionProps = {
+    id: string;
     content: string;
     author:{
         name: string;
@@ -16,7 +17,7 @@ export function Question({
     ...props
 }: QuestionProps){
     return (
-        <div className="question">
+        <div className="question" id={props.id}>
             <p>{content}</p>
             <footer>
                 <div className="user-info">

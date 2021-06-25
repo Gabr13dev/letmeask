@@ -44,7 +44,13 @@ export function Home() {
     if (!roomRef.exists()) {
         alert("Sala não existe!");
     }else{
+      if(roomRef.val().endedAt){
+        alert("A sala ja foi encerrada.");
+        setContentButtonJoin(<><img src={loginIcon} alt="Join room Icon" /> Entrar na sala</>);
+        return;
+      }else{
         history.push(`/rooms/${roomCode}`);
+      }
     }
     setContentButtonJoin(<><img src={loginIcon} alt="Join room Icon" /> Entrar na sala</>);
   }
