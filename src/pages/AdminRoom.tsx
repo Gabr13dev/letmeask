@@ -11,12 +11,18 @@ import { useRoom } from "../hooks/useRoom";
 
 import letMeAskLogo from "../assets/images/logo.svg";
 import emptyQuestionsImg from "../assets/images/empty-questions.svg";
-//import deleteImg from "../assets/images/delete.svg";
+import checkImg from "../assets/images/check.svg";
+import checkImgGreen from "../assets/images/checkg.svg";
+import answerImg from "../assets/images/answer.svg";
 
 import "../styles/Room.scss";
 import { useState } from "react";
 import { useAuth } from "../hooks/useAuth";
 import { database } from "../services/firebase";
+
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { UserHeader } from "../components/UserHeader";
 
 type ParamsURL = {
   id: string;
@@ -49,12 +55,29 @@ export function AdminRoom() {
     setIsTerminateModalOpen(false);
   }
 
+  async function handleCheckQuestionAnswered(questionId: string){
+    await database
+      .ref(`rooms/${roomId}/questions/${questionId}`).update({
+        isAnswered: true,
+      });
+      toast("Pergunta marcada como respondida!");
+  }
+
+  async function handleHighlightQuestion(questionId: string){
+    await database
+    .ref(`rooms/${roomId}/questions/${questionId}`).update({
+      isHighlighted: true,
+    });
+    toast("Pergunta destacada!");
+  }
+
   async function handleTerminateRoom() {
     await database.ref(`rooms/${roomId}`).update({
       endedAt: new Date(),
     });
 
     history.push(`/`);
+    toast("Sala finalizada!");
   }
 
   async function handleDeleteQuestion() {
@@ -62,6 +85,7 @@ export function AdminRoom() {
       .ref(`rooms/${roomId}/questions/${toDeleteQuestion}`)
       .remove();
     setIsDeleteModalOpen(false);
+    toast("Pergunta removida!");
   }
 
   return (
@@ -79,6 +103,7 @@ export function AdminRoom() {
             <Button isOutlined onClick={openTerminateModal}>
               Encerrar a sala
             </Button>
+            <UserHeader />
           </div>
         </div>
       </header>
@@ -91,7 +116,7 @@ export function AdminRoom() {
               ? questions.length > 1
                 ? `${questions.length} perguntas`
                 : `${questions.length} pergunta`
-              : "Seja o primeiro a perguntar"}
+              : "Tudo pronto para começar a receber perguntas"}
           </span>
         </div>
         <div className="question-list">
@@ -103,7 +128,18 @@ export function AdminRoom() {
                   content={question.content}
                   author={question.author}
                   id={question.id}
+                  isAnswered={question.isAnswered}
+                  isHighlighted={question.isHighlighted}
                 >
+                  {!question.isAnswered ? (
+                  <><button onClick={() => handleCheckQuestionAnswered(question.id)}>
+                    <img src={checkImg} alt="Marcar pergunta como respondida" />
+                  </button>
+                  <button onClick={() => handleHighlightQuestion(question.id)}>
+                    <img src={answerImg} alt="Dar destaque á pergunta" />
+                  </button></>
+                  ) : (<img src={checkImgGreen} alt="Marcar pergunta como respondida" />) }
+
                   <button onClick={() => openDeleteModal(question.id)}>
                     <svg
                       width="24"
@@ -231,6 +267,7 @@ export function AdminRoom() {
           </div>
         </div>
       </HyperModal>
+      <ToastContainer />
     </div>
   );
 }

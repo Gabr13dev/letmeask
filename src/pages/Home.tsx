@@ -1,4 +1,4 @@
-import { useHistory } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 
 import { database } from "../services/firebase";
 
@@ -16,18 +16,25 @@ import { UserCard } from "../components/UserCard";
 import "../styles/auth.scss";
 import { FormEvent, useState } from "react";
 
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 export function Home() {
   const history = useHistory();
   const { user, signInWithGoogle, signOut } = useAuth();
   const [roomCode, setRoomCode] = useState("");
-  const [ contentButtonJoin, setContentButtonJoin ] = useState(<><img src={loginIcon} alt="Join room Icon" /> Entrar na sala</>);
+  const [contentButtonJoin, setContentButtonJoin] = useState(<><img src={loginIcon} alt="Join room Icon" /> Entrar na sala</>);
 
   async function handleCreateRoom() {
     if (!user) {
       await signInWithGoogle();
     }
-
-    history.push("/rooms/new");
+    if (localStorage.getItem("roomId") === null) {
+      history.push("/rooms/new");
+    } else {
+      localStorage.removeItem("roomId");
+      history.push(`/rooms/${localStorage.getItem("roomId")}`);
+    }
   }
 
   async function handleJoinRoom(event: FormEvent) {
@@ -36,19 +43,20 @@ export function Home() {
 
     if (roomCode.trim() === "") {
       setContentButtonJoin(<><img src={loginIcon} alt="Join room Icon" /> Entrar na sala</>);
+      toast("Campo vazio!");
       return;
     }
 
     const roomRef = await database.ref(`rooms/${roomCode}`).get();
 
     if (!roomRef.exists()) {
-        alert("Sala não existe!");
-    }else{
-      if(roomRef.val().endedAt){
-        alert("A sala ja foi encerrada.");
+      toast("Sala não existe!");
+    } else {
+      if (roomRef.val().endedAt) {
+        toast("A sala foi encerrada!");
         setContentButtonJoin(<><img src={loginIcon} alt="Join room Icon" /> Entrar na sala</>);
         return;
-      }else{
+      } else {
         history.push(`/rooms/${roomCode}`);
       }
     }
@@ -69,17 +77,17 @@ export function Home() {
       <main>
         <div className="main-content">
           <img src={logoimg} alt="Letmeask Logo" />
-          { !user ? (
-        <button className="create-room" onClick={handleCreateRoom}>
-          <img src={googleIcon} alt="Google Icon" />
-          Crie sua sala com o Google
-        </button>
-      ) : (
-        <>
-          <UserCard user={user} logout={signOut} />{" "}
-          <Button onClick={navigateToCreateRoom} style={{marginTop: '2rem'}}>Quero criar uma sala</Button>{" "}
-        </>
-      )}
+          {!user ? (
+            <button className="create-room" onClick={handleCreateRoom}>
+              <img src={googleIcon} alt="Google Icon" />
+              Crie sua sala com o Google
+            </button>
+          ) : (
+            <>
+              <UserCard user={user} logout={signOut} />{" "}
+              <Button onClick={navigateToCreateRoom} style={{ marginTop: '2rem' }}>Quero criar uma sala</Button>{" "}
+            </>
+          )}
           <div className="separator">ou entre em uma sala</div>
           <form onSubmit={handleJoinRoom}>
             <input
@@ -92,8 +100,12 @@ export function Home() {
               {contentButtonJoin}
             </Button>
           </form>
+          <p>
+            Não sabe em qual sala entrar? <Link to="/rooms/list">Ver salas</Link>
+          </p>
         </div>
       </main>
+      <ToastContainer />
     </div>
   );
 }

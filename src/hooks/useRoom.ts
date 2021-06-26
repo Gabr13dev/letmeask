@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "./useAuth";
 import { database } from '../services/firebase'
+import { useHistory } from "react-router-dom";
+import { toast } from "react-toastify";
 
 type FirebaseQuestions = Record<string, {
     author: {
@@ -32,13 +34,20 @@ type QuestionType = {
 export function useRoom(roomId: string){
     const [questions, setQuestions] = useState<QuestionType[]>([]);
     const [title, setTitle] = useState('');
+    const [author, setAuthor] = useState('');
     const { user } = useAuth();
+    const history = useHistory();
 
     useEffect(() => {
         const roomRef = database.ref(`rooms/${roomId}`);
         
-        roomRef.on('value', room => {
+        roomRef.orderByChild('likeCount').on('value', room => {
             const databaseRoom = room.val();
+            if(room.val() === null){
+                history.push("/");
+                return;
+            }
+            setAuthor(room.val().authorId);
             const fireBaseQuestions: FirebaseQuestions = databaseRoom.questions ?? {};
             const parsedQuestions = Object.entries(fireBaseQuestions).map(([key, value]) => {
                 return {
@@ -48,7 +57,7 @@ export function useRoom(roomId: string){
                     isHighlighted: value.isHighlighted,
                     isAnswered: value.isAnswered,
                     likeCount: Object.values(value.likes ?? {}).length,
-                    likeId: Object.entries(value.likes ?? {}).find(([kaey, like]) => like.authorId === user?.id)?.[0],
+                    likeId: Object.entries(value.likes ?? {}).find(([key, like]) => like.authorId === user?.id)?.[0],
                 }
             });
             setTitle(databaseRoom.title);
@@ -61,5 +70,5 @@ export function useRoom(roomId: string){
         
     }, [roomId, user?.id])
 
-    return  {questions, title };
+    return  {questions, title, author};
 }

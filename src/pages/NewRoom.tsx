@@ -18,6 +18,9 @@ import { useAuth } from '../hooks/useAuth';
 import { database } from '../services/firebase'
 import { Loading } from '../components/Loading';
 
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 export function NewRoom(){
     const { user } = useAuth();
     const [ newRoom, setNewRoom ] = useState('');
@@ -27,6 +30,7 @@ export function NewRoom(){
     async function handleCreateRoom(event: FormEvent) {
         event.preventDefault();
         if(newRoom.trim() ===  ''){
+            toast("Campo vazio!");
             return;
         }else{
             setContentButtonSend(<><img src={loadingIcon} alt="Loading icon" /></>);
@@ -34,6 +38,8 @@ export function NewRoom(){
             const firebaseRoom = await roomRef.push({
                 title: newRoom,
                 authorId: user?.id,
+                authorName: user?.name,
+                authorAvatar: user?.avatar,
             });
 
             history.push(`/rooms/${firebaseRoom.key}`)
@@ -74,6 +80,7 @@ export function NewRoom(){
                     </p>
                 </div>
             </main>
+            <ToastContainer />
         </div>
     )
 }
