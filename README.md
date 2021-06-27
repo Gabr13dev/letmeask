@@ -1,5 +1,5 @@
 <p align="center">
-  <img alt="Letmeask" src="https://github.com/rocketseat-education/nlw-06-reactjs/logo.svg" width="160px">
+  <img alt="Letmeask" src="https://firebasestorage.googleapis.com/v0/b/letmeask-2c9aa.appspot.com/o/logo.svg?alt=media&token=d9004d96-5290-4ff8-bc35-2e020c9fd955" width="160px">
 </p>
 
 <p align="center">
@@ -11,7 +11,7 @@
 </p>
 
 <h1 align="center">
-    <img alt="Letmeask" src="https://github.com/rocketseat-education/nlw-06-reactjs/cover.svg" />
+    <img alt="Letmeask" src="https://firebasestorage.googleapis.com/v0/b/letmeask-2c9aa.appspot.com/o/cover.svg?alt=media&token=d9a8b4e6-1b60-4f82-b7ea-6f9c7e5dbc4f" />
 </h1>
 
 <br>
