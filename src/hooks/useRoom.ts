@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { useAuth } from "./useAuth";
 import { database } from '../services/firebase'
 import { useHistory } from "react-router-dom";
-import { toast } from "react-toastify";
 
 type FirebaseQuestions = Record<string, {
     author: {

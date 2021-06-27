@@ -14,7 +14,7 @@ import emptyQuestionsImg from "../assets/images/empty-questions.svg";
 import "../styles/Room.scss";
 import { useState } from "react";
 import { useAuth } from "../hooks/useAuth";
-import { auth, database } from "../services/firebase";
+import { database } from "../services/firebase";
 import { FormEvent } from "react";
 
 import { ToastContainer, toast } from 'react-toastify';

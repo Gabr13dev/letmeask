@@ -1,21 +1,20 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "./useAuth";
-import { database } from '../services/firebase'
+import { database } from '../services/firebase';
+import { RoomsType } from '../models/rooms.modal'
 
 type FirebaseRooms = Record<string, {
     title: string;
     authorId: string;
-    /*questions: Record<string, {
+    authorName: string;
+    authorAvatar: string;
+    endedAt?: Date;
+    questions: Record<string, {
         key: string;
-    }>;*/
+    }>;
 }>
 
-type RoomsType = {
-    id: string;
-    title: string;
-    authorId: string;
-    //questionsCount: number;
-}
+
 
 export function useListRooms(){
     const [rooms, setRooms] = useState<RoomsType[]>([]);
@@ -23,17 +22,18 @@ export function useListRooms(){
 
     useEffect(() => {
         const roomRef = database.ref(`rooms`);
-        
-        roomRef.on('value', rooms => {
-            console.log(rooms.val())
+        roomRef.once('value', rooms => {
             const databaseRoom = rooms.val();
-            const fireBaseRooms: FirebaseRooms = databaseRoom.rooms ?? {};
+            const fireBaseRooms: FirebaseRooms = databaseRoom ?? {};
             const parsedRooms = Object.entries(fireBaseRooms).map(([key, value]) => {
                 return {
                     id: key,
                     authorId: value.authorId,
                     title: value.title,
-                    //questionsCount: Object.values(value.questions ?? {}).length,
+                    authorAvatar: value.authorAvatar,
+                    authorName: value.authorName,
+                    endedAt: value.endedAt,
+                    questionsCount: Object.values(value.questions ?? {}).length,
                 }
             });
             setRooms(parsedRooms);

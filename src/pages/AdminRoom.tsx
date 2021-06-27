@@ -30,13 +30,17 @@ type ParamsURL = {
 
 export function AdminRoom() {
   const history = useHistory();
-  const user = useAuth();
+  const { user } = useAuth();
   const params = useParams<ParamsURL>();
   const roomId = params.id;
-  const { title, questions } = useRoom(roomId);
+  const { title, questions, author } = useRoom(roomId);
   const [isModalDeleteOpen, setIsDeleteModalOpen] = useState(false);
   const [isModalTerminateOpen, setIsTerminateModalOpen] = useState(false);
   const [toDeleteQuestion, setToDeleteQuestion] = useState("");
+
+  if(!user || user.id !== author){
+    history.push("/")
+  }
 
   function openDeleteModal(idQuestion: string) {
     setToDeleteQuestion(idQuestion);
