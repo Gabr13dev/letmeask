@@ -1,5 +1,5 @@
 <p align="center">
-  <img alt="Letmeask" src="https://firebasestorage.googleapis.com/v0/b/letmeask-2c9aa.appspot.com/o/logo.svg?alt=media&token=d9004d96-5290-4ff8-bc35-2e020c9fd955" width="160px">
+  <img alt="Letmeask" src="https://firebasestorage.googleapis.com/v0/b/letmeask-2c9aa.appspot.com/o/logo.svg?alt=media&token=ad82717c-0701-48fd-b5d4-6445606999d3" width="160px">
 </p>
 
 <p align="center">
